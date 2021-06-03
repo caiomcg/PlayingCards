@@ -13,8 +13,16 @@ type Deck struct {
     Cards []Card `json:"cards"`
 }
 
+type DeckDTO struct {
+  ID string `json:"deck_id"`
+  Amount int `json:"amount"`
+}
+
 func (d Deck) Shuffle() {
-    shuffleCards(d.Cards)
+    rand.Seed(time.Now().UnixNano())
+    rand.Shuffle(len(d.Cards), func(i, j int) {
+        d.Cards[i], d.Cards[j] = d.Cards[j], d.Cards[i]
+    })
 }
 
 func CreateDeck(shuffle bool, custom []string) Deck {
@@ -39,9 +47,3 @@ func CreateDeck(shuffle bool, custom []string) Deck {
     return deck
 }
 
-func shuffleCards(cards []Card) {
-    rand.Seed(time.Now().UnixNano())
-    rand.Shuffle(len(cards), func(i, j int) {
-        cards[i], cards[j] = cards[j], cards[i]
-    })
-}

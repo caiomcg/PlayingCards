@@ -7,6 +7,7 @@ import (
     "net/http"
     "github.com/labstack/echo/v4"
     "caiomcg.com/playing_cards/src/models"
+    "caiomcg.com/playing_cards/src/helpers"
 )
 
 var Decks []models.Deck = []models.Deck{}
@@ -14,6 +15,7 @@ var Decks []models.Deck = []models.Deck{}
 func CreateDeckEndpoint(c echo.Context) error {
     shuffle := processShuffleParam(c.QueryParam("shuffle"))
     deck := processCardsParam(c.QueryParam("cards"))
+
     newDeck := models.CreateDeck(shuffle, deck)
 
     Decks = append(Decks, newDeck)
@@ -30,25 +32,52 @@ func OpenDeckEndpoint(c echo.Context) error {
     deck, e := findDeck(id)
 
     if e != nil {
-        return e
+        return helpers.NewHTTPError(
+            http.StatusNotFound,
+            "Invalid deck_did",
+            "Could not find a deck with the desired ID",
+        )
     }
 
     return c.JSON(http.StatusOK, deck)
 }
 
 func FetchDeckCardsEndpoint(c echo.Context) error {
-    id := c.Param("id")
-    count, _ := strconv.ParseInt(c.Param("count"), 10, 32)
+    deckDTO := new(models.DeckDTO)
 
-    deck, e := findDeck(id)
+    if err := c.Bind(deckDTO); err != nil {
+      return helpers.NewHTTPError(
+          http.StatusInternalServerError,
+          "ParserError",
+          "Could not parse the given parameters",
+      )
+    }
+
+    if (deckDTO.ID == "" || deckDTO.Amount == 0) {
+      return helpers.NewHTTPError(
+          http.StatusBadRequest,
+          "InvalidParams",
+          "Both deck_id and amount have to be valid in order to process the content",
+      )
+    }
+
+    deck, e := findDeck(deckDTO.ID)
 
     if e != nil {
-        return e
+        return helpers.NewHTTPError(
+            http.StatusNotFound,
+            "Invalid deck_id",
+            "Could not find a deck with the desired ID",
+        )
+    }
+
+    cards := models.Cards{
+        Cards: deck.Cards[0:getAvailableRange(int(deckDTO.Amount), len(deck.Cards))],
     }
 
     return c.JSON(
-        http.StatusOK, 
-        deck.Cards[0:getAvailableRange(int(count), len(deck.Cards))],
+        http.StatusOK,
+        cards,
     )
 }
 
