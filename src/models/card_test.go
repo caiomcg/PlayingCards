@@ -198,4 +198,10 @@ func TestGenerateCustomSet(t *testing.T) {
 	if len(multipleCardDeck) < 2 || !deepCompare(multipleCardDeck, multipleCardCode) {
 		t.Error("Should create a set with multiple cards")
 	}
+
+	repeatedCardCode := []string{"AS", "AS", "3D", "KC"}
+	repeatedCardDeck := GenerateCustomSet(repeatedCardCode)
+	if len(repeatedCardDeck) != 3 || deepCompare(repeatedCardDeck, repeatedCardCode) {
+		t.Error("Should create a set with no duplicate cards")
+	}
 }

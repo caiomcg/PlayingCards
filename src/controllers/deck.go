@@ -7,6 +7,9 @@ import (
 	"net/http"
 )
 
+// This is our "DB". To avoid taking more time studying an in memory database
+// I've decided upon using a simple array as our database. This should be
+// moved to a dedicated DB if we care about ACID
 var Decks []models.Deck = []models.Deck{}
 
 func CreateDeckEndpoint(c echo.Context) error {
@@ -40,36 +43,25 @@ func OpenDeckEndpoint(c echo.Context) error {
 }
 
 func FetchDeckCardsEndpoint(c echo.Context) error {
-	deckDTO := new(models.DeckDTO)
-
-	if err := c.Bind(deckDTO); err != nil {
-		return helpers.NewHTTPError(
-			http.StatusInternalServerError,
-			"ParserError",
-			"Could not parse the given parameters",
-		)
-	}
-
-	if deckDTO.ID == "" || deckDTO.Amount == 0 {
-		return helpers.NewHTTPError(
-			http.StatusBadRequest,
-			"InvalidParams",
-			"Both deck_id and amount have to be valid in order to process the content",
-		)
-	}
-
-	deck, e := findDeck(deckDTO.ID)
-
+	deck, e := findDeck(c.QueryParam("id"))
 	if e != nil {
 		return helpers.NewHTTPError(
 			http.StatusNotFound,
-			"Invalid deck_id",
+			"Invalid id",
 			"Could not find a deck with the desired ID",
 		)
 	}
 
+    amount, e := processAmountParam(c.QueryParam("amount"))
+    if e != nil {
+        return helpers.NewHTTPError(
+            http.StatusBadRequest,
+            "Invalid amount",
+            "Amount not given or zero",
+        )
+    }
 	cards := models.Cards{
-		Cards: deck.Cards[0:getAvailableRange(int(deckDTO.Amount), len(deck.Cards))],
+		Cards: deck.Cards[0:getAvailableRange(int(amount), len(deck.Cards))],
 	}
 
 	return c.JSON(
@@ -77,4 +69,3 @@ func FetchDeckCardsEndpoint(c echo.Context) error {
 		cards,
 	)
 }
-

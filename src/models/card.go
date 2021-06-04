@@ -2,9 +2,9 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"regexp"
 	"strconv"
+    "fmt"
 )
 
 type Card struct {
@@ -100,10 +100,25 @@ func GetDefaultSet() []Card {
 	return cards
 }
 
+func removeDuplicates(elements []string) []string {
+    encountered := map[string]bool{}
+    result := []string{}
+
+    for v := range elements {
+        if encountered[elements[v]] == true {
+            ;
+        } else {
+            encountered[elements[v]] = true
+            result = append(result, elements[v])
+        }
+    }
+    return result
+}
+
 func GenerateCustomSet(in []string) []Card {
 	result := []Card{}
 
-	for _, v := range in {
+	for _, v := range removeDuplicates(in) {
 		card, e := CreateCardFromCode(v)
 		if e == nil {
 			result = append(result, card)
