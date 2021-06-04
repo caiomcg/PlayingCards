@@ -6,9 +6,9 @@ type Suits string
 
 const (
 	Clubs    Suits = "CLUBS"
-	Diamonds       = "DIAMONDS"
-	Hearts         = "HEARTS"
-	Spades         = "SPADES"
+	Diamonds Suits = "DIAMONDS"
+	Hearts   Suits = "HEARTS"
+	Spades   Suits = "SPADES"
 )
 
 func (s Suits) GetCode() string {

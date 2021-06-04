@@ -23,10 +23,12 @@ func (d Deck) Shuffle() {
 	rand.Shuffle(len(d.Cards), func(i, j int) {
 		d.Cards[i], d.Cards[j] = d.Cards[j], d.Cards[i]
 	})
+    d.Shuffled = true
 }
 
 func CreateDeck(shuffle bool, custom []string) Deck {
 	var cards []Card
+
 	if len(custom) == 0 {
 		cards = GetDefaultSet()
 	} else {
@@ -35,7 +37,7 @@ func CreateDeck(shuffle bool, custom []string) Deck {
 
 	deck := Deck{
 		Id:        uuid.NewV4(),
-		Shuffled:  shuffle,
+		Shuffled:  false,
 		Remaining: uint8(len(cards)),
 		Cards:     cards,
 	}

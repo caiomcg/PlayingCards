@@ -102,10 +102,8 @@ func GetDefaultSet() []Card {
 
 func GenerateCustomSet(in []string) []Card {
 	result := []Card{}
-	fmt.Println(in)
 
 	for _, v := range in {
-		fmt.Println("Creating for", v)
 		card, e := CreateCardFromCode(v)
 		if e == nil {
 			result = append(result, card)
