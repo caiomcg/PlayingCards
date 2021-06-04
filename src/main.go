@@ -1,14 +1,18 @@
 package main
 
 import (
+    "log"
+    "fmt"
+    "os"
 	"caiomcg.com/playing_cards/src/helpers"
 	"caiomcg.com/playing_cards/src/routes"
 )
 
+import "github.com/joho/godotenv"
 import "github.com/labstack/echo/v4"
 import "github.com/labstack/echo/v4/middleware"
 
-func createAndStartServer() {
+func createAndStartServer(port string) {
 	e := echo.New()
 	e.HTTPErrorHandler = helpers.ErrorHandler
 
@@ -19,9 +23,19 @@ func createAndStartServer() {
 
 	routes.RegisterDeck(e.Router())
 
-	e.Logger.Fatal(e.Start(":8000"))
+    e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", port)))
 }
 
 func main() {
-	createAndStartServer()
+    err := godotenv.Load()
+    if err != nil {
+        log.Fatal("Erro loading .env")
+    }
+
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "8000"
+    }
+
+    createAndStartServer(port)
 }
