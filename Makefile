@@ -34,6 +34,9 @@ ifeq ($(EXPORT_RESULT), true)
 	gocov convert profile.cov | gocov-xml > coverage.xml
 endif
 
+fmt:
+	go fmt caiomcg.com/...
+
 run: build
 	./out/bin/$(BINARY)
 
