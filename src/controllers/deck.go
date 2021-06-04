@@ -52,14 +52,14 @@ func FetchDeckCardsEndpoint(c echo.Context) error {
 		)
 	}
 
-    amount, e := processAmountParam(c.QueryParam("amount"))
-    if e != nil {
-        return helpers.NewHTTPError(
-            http.StatusBadRequest,
-            "Invalid amount",
-            "Amount not given or zero",
-        )
-    }
+	amount, e := processAmountParam(c.QueryParam("amount"))
+	if e != nil {
+		return helpers.NewHTTPError(
+			http.StatusBadRequest,
+			"Invalid amount",
+			"Amount not given or zero",
+		)
+	}
 	cards := models.Cards{
 		Cards: deck.Cards[0:getAvailableRange(int(amount), len(deck.Cards))],
 	}

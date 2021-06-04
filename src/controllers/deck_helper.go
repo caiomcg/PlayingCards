@@ -18,16 +18,16 @@ func findDeck(id string) (models.Deck, error) {
 
 func processAmountParam(amount string) (int64, error) {
 	if amount == "" {
-        return 0, errors.New("An amount is required")
+		return 0, errors.New("An amount is required")
 	}
 
-    amount_num, err := strconv.ParseInt(amount, 10, 64)
+	amount_num, err := strconv.ParseInt(amount, 10, 64)
 
-    if err != nil || amount_num <= 0 {
-        return 0, errors.New("Invalid amount")
-    }
+	if err != nil || amount_num <= 0 {
+		return 0, errors.New("Invalid amount")
+	}
 
-    return amount_num, nil
+	return amount_num, nil
 }
 
 func processShuffleParam(shuffle string) bool {

@@ -23,7 +23,7 @@ func CreateServer() *echo.Echo {
 	e.Use(middleware.Recover())
 	routes.RegisterDeck(e.Router())
 
-    return e
+	return e
 }
 
 func main() {
@@ -37,6 +37,6 @@ func main() {
 		port = "8000"
 	}
 
-    e := CreateServer()
+	e := CreateServer()
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", port)))
 }
