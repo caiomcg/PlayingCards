@@ -1,14 +1,14 @@
-## **Create Deck**
+## **Fetch Deck**
 
-Returns json data about upon the creation of a deck.
+Returns a single Deck of cards based on the given uuid
 
 - **URL**
 
-  /decks
+  /decks/:id
 
 - **Method:**
 
-  `POST`
+  `GET`
 
 - **URL Params**
 
@@ -16,9 +16,7 @@ Returns json data about upon the creation of a deck.
 
 - **Query Params**
 
-  `shuffle=[bool]` wether to shuffle the deck or not (default: false)
-
-  `cards=[strings]` card codes to be added, as is, to the deck (default: all)
+  None
 
 - **Data Params**
 
@@ -28,3 +26,7 @@ Returns json data about upon the creation of a deck.
 
   - **Code:** 200 <br />
     **Content:** `{ "deck_id": "e5db62c5-fd0c-4cc9-a460-89030a1d836e", "shuffled": false, "remaining": 52, "cards": [ { "value": "ACE", "suit": "SPADES", "code": "AS" }, ...] }`
+
+- **Fail Response**
+  - **Code:** 404 <br />
+    **Content:** `{ "error": "Invalid deck_id", "message": "Could not find a deck with the desired ID" }`
