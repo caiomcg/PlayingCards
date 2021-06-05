@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"caiomcg.com/playing_cards/src/db"
 	"caiomcg.com/playing_cards/src/helpers"
 	"caiomcg.com/playing_cards/src/models"
 	"github.com/labstack/echo/v4"
@@ -10,8 +11,6 @@ import (
 // This is our "DB". To avoid taking more time studying an in memory database
 // I've decided upon using a simple array as our database. This should be
 // moved to a dedicated DB if we care about ACID
-var Decks []models.Deck = []models.Deck{}
-
 func CreateDeckEndpoint(c echo.Context) error {
 	shuffle := processShuffleParam(c.QueryParam("shuffle"))
 	deck := processCardsParam(c.QueryParam("cards"))
@@ -25,19 +24,16 @@ func CreateDeckEndpoint(c echo.Context) error {
 		)
 	}
 
-	Decks = append(Decks, newDeck)
+	db.Instance().Insert(newDeck)
 	return c.JSON(http.StatusOK, newDeck)
 }
 
 func FetchDecksEndpoint(c echo.Context) error {
-	return c.JSON(http.StatusOK, Decks)
+	return c.JSON(http.StatusOK, db.Instance().GetAll())
 }
 
 func OpenDeckEndpoint(c echo.Context) error {
-	id := c.Param("id")
-
-	deck, e := findDeck(id)
-
+	deck, e := db.Instance().Find(c.Param("id"))
 	if e != nil {
 		return helpers.NewHTTPError(
 			http.StatusNotFound,
@@ -50,7 +46,7 @@ func OpenDeckEndpoint(c echo.Context) error {
 }
 
 func FetchDeckCardsEndpoint(c echo.Context) error {
-	deck, e := findDeck(c.QueryParam("id"))
+	deck, e := db.Instance().Find(c.QueryParam("id"))
 	if e != nil {
 		return helpers.NewHTTPError(
 			http.StatusNotFound,

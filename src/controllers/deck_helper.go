@@ -1,21 +1,10 @@
 package controllers
 
 import (
-	"caiomcg.com/playing_cards/src/models"
 	"errors"
 	"strconv"
 	"strings"
 )
-
-func findDeck(id string) (*models.Deck, error) {
-	for i, _ := range Decks {
-		if Decks[i].Id.String() == id {
-			return &Decks[i], nil
-		}
-	}
-
-	return &models.Deck{}, errors.New("Deck not found")
-}
 
 func processAmountParam(amount string) (int64, error) {
 	if amount == "" {

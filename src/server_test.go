@@ -2,7 +2,7 @@ package main
 
 import "testing"
 import (
-	"caiomcg.com/playing_cards/src/controllers"
+	"caiomcg.com/playing_cards/src/db"
 	"caiomcg.com/playing_cards/src/models"
 	"encoding/json"
 	"fmt"
@@ -19,10 +19,17 @@ func resetDb() {
 	fDeck, _ := models.CreateDeck(true, []string{})
 	sDeck, _ := models.CreateDeck(false, []string{"AS", "2C"})
 
-	controllers.Decks = []models.Deck{
-		fDeck,
-		sDeck,
+	db.Instance().Wipe()
+	db.Instance().Insert(fDeck)
+	db.Instance().Insert(sDeck)
+}
+
+func getElementFromDatabase() models.Deck {
+	deck, e := db.Instance().Peek()
+	if e != nil {
+		panic(e)
 	}
+	return deck
 }
 
 func extractDeck(data []byte) models.Deck {
@@ -204,7 +211,7 @@ func TestOpenDeckEndpoint(t *testing.T) {
 
 	resetDb()
 
-	r.GET(fmt.Sprintf("/decks/%s", controllers.Decks[0].Id)).
+	r.GET(fmt.Sprintf("/decks/%s", getElementFromDatabase().Id.String())).
 		Run(CreateServer(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
 			assert.Equal(t, http.StatusOK, r.Code)
 
@@ -214,7 +221,7 @@ func TestOpenDeckEndpoint(t *testing.T) {
 				panic(err)
 			}
 
-			assert.Equal(t, controllers.Decks[0].Id, deck.Id)
+			assert.Equal(t, getElementFromDatabase().Id, deck.Id)
 		})
 
 	r.GET(fmt.Sprintf("/decks/%s", "INVALID")).
@@ -231,7 +238,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 	// Request with correct body
 	r.GET("/decks/cards").
 		SetQuery(gofight.H{
-			"id":     controllers.Decks[0].Id.String(),
+			"id":     getElementFromDatabase().Id.String(),
 			"amount": "10",
 		}).
 		Run(CreateServer(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
@@ -269,7 +276,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 	// Request with missing amount
 	r.GET("/decks/cards").
 		SetQuery(gofight.H{
-			"id": controllers.Decks[0].Id.String(),
+			"id": getElementFromDatabase().Id.String(),
 		}).
 		Run(CreateServer(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
 			assert.Equal(t, http.StatusBadRequest, r.Code)
@@ -278,7 +285,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 	// Request with invalid amount
 	r.GET("/decks/cards").
 		SetQuery(gofight.H{
-			"id":     controllers.Decks[0].Id.String(),
+			"id":     getElementFromDatabase().Id.String(),
 			"amount": "0",
 		}).
 		Run(CreateServer(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
@@ -287,7 +294,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 
 	r.GET("/decks/cards").
 		SetQuery(gofight.H{
-			"id":     controllers.Decks[0].Id.String(),
+			"id":     getElementFromDatabase().Id.String(),
 			"amount": "-12",
 		}).
 		Run(CreateServer(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
@@ -296,7 +303,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 
 	r.GET("/decks/cards").
 		SetQuery(gofight.H{
-			"id":     controllers.Decks[0].Id.String(),
+			"id":     getElementFromDatabase().Id.String(),
 			"amount": "INVALID",
 		}).
 		Run(CreateServer(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
