@@ -26,13 +26,30 @@ func (d *Deck) Shuffle() {
 	d.Shuffled = true
 }
 
-func CreateDeck(shuffle bool, custom []string) Deck {
+func (d *Deck) Draw(count int) Cards {
+	amountToDraw := getAvailableRange(count, len(d.Cards))
+
+	cards := Cards{
+		Cards: d.Cards[0:amountToDraw],
+	}
+
+	d.Cards = d.Cards[amountToDraw:]
+	d.Remaining = d.Remaining - uint8(amountToDraw)
+
+	return cards
+}
+
+func CreateDeck(shuffle bool, custom []string) (Deck, error) {
 	var cards []Card
 
 	if len(custom) == 0 {
 		cards = GetDefaultSet()
 	} else {
-		cards = GenerateCustomSet(custom)
+		customCards, e := GenerateCustomSet(custom)
+		if e != nil {
+			return Deck{}, e
+		}
+		cards = customCards
 	}
 
 	deck := Deck{
@@ -46,5 +63,12 @@ func CreateDeck(shuffle bool, custom []string) Deck {
 		deck.Shuffle()
 	}
 
-	return deck
+	return deck, nil
+}
+
+func getAvailableRange(requested int, available int) int {
+	if requested > available {
+		return available
+	}
+	return requested
 }

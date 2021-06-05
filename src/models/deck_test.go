@@ -3,7 +3,7 @@ package models
 import "testing"
 
 func TestCreateDeck(t *testing.T) {
-	regularDeck := CreateDeck(false, []string{})
+	regularDeck, _ := CreateDeck(false, []string{})
 
 	if len(regularDeck.Cards) != 52 {
 		t.Error("A regular deck should contain 52 cards")

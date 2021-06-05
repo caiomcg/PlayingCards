@@ -16,7 +16,14 @@ func CreateDeckEndpoint(c echo.Context) error {
 	shuffle := processShuffleParam(c.QueryParam("shuffle"))
 	deck := processCardsParam(c.QueryParam("cards"))
 
-	newDeck := models.CreateDeck(shuffle, deck)
+	newDeck, e := models.CreateDeck(shuffle, deck)
+	if e != nil {
+		return helpers.NewHTTPError(
+			http.StatusBadRequest,
+			"Invalid custom card",
+			"Card codes should follow the estipulated rules",
+		)
+	}
 
 	Decks = append(Decks, newDeck)
 	return c.JSON(http.StatusOK, newDeck)
@@ -34,7 +41,7 @@ func OpenDeckEndpoint(c echo.Context) error {
 	if e != nil {
 		return helpers.NewHTTPError(
 			http.StatusNotFound,
-			"Invalid deck_did",
+			"Invalid deck_id",
 			"Could not find a deck with the desired ID",
 		)
 	}
@@ -51,7 +58,6 @@ func FetchDeckCardsEndpoint(c echo.Context) error {
 			"Could not find a deck with the desired ID",
 		)
 	}
-
 	amount, e := processAmountParam(c.QueryParam("amount"))
 	if e != nil {
 		return helpers.NewHTTPError(
@@ -60,12 +66,9 @@ func FetchDeckCardsEndpoint(c echo.Context) error {
 			"Amount not given or zero",
 		)
 	}
-	cards := models.Cards{
-		Cards: deck.Cards[0:getAvailableRange(int(amount), len(deck.Cards))],
-	}
 
 	return c.JSON(
 		http.StatusOK,
-		cards,
+		deck.Draw(int(amount)),
 	)
 }

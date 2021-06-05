@@ -181,27 +181,33 @@ func deepCompare(cards []Card, codes []string) bool {
 	return true
 }
 func TestGenerateCustomSet(t *testing.T) {
-	emptySet := GenerateCustomSet([]string{})
+	emptySet, _ := GenerateCustomSet([]string{})
 
 	if len(emptySet) != 0 {
 		t.Error("Should create an empty deck")
 	}
 
 	oneCardCode := []string{"AS"}
-	oneCardSet := GenerateCustomSet(oneCardCode)
+	oneCardSet, _ := GenerateCustomSet(oneCardCode)
 	if len(oneCardSet) != 1 || !deepCompare(oneCardSet, oneCardCode) {
 		t.Error("Should create a deck with only one card")
 	}
 
 	multipleCardCode := []string{"AS", "2H", "3D", "KC"}
-	multipleCardDeck := GenerateCustomSet(multipleCardCode)
+	multipleCardDeck, _ := GenerateCustomSet(multipleCardCode)
 	if len(multipleCardDeck) < 2 || !deepCompare(multipleCardDeck, multipleCardCode) {
 		t.Error("Should create a set with multiple cards")
 	}
 
 	repeatedCardCode := []string{"AS", "AS", "3D", "KC"}
-	repeatedCardDeck := GenerateCustomSet(repeatedCardCode)
+	repeatedCardDeck, _ := GenerateCustomSet(repeatedCardCode)
 	if len(repeatedCardDeck) != 3 || deepCompare(repeatedCardDeck, repeatedCardCode) {
 		t.Error("Should create a set with no duplicate cards")
+	}
+
+	invalidCardCode := []string{"ZZ"}
+	_, e := GenerateCustomSet(invalidCardCode)
+	if e == nil {
+		t.Error("Should fail if the code is invalid")
 	}
 }

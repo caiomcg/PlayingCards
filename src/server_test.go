@@ -12,14 +12,16 @@ import (
 )
 
 var (
-	validDeck           = `{}`
 	STANDARD_SIZE uint8 = 52
 )
 
 func resetDb() {
+	fDeck, _ := models.CreateDeck(true, []string{})
+	sDeck, _ := models.CreateDeck(false, []string{"AS", "2C"})
+
 	controllers.Decks = []models.Deck{
-		models.CreateDeck(true, []string{}),
-		models.CreateDeck(false, []string{"AS", "2C"}),
+		fDeck,
+		sDeck,
 	}
 }
 
@@ -174,6 +176,16 @@ func TestCreateDeckEndpoint(t *testing.T) {
 			assert.Equal(t, true, deck.Shuffled)
 			assert.Equal(t, STANDARD_SIZE, deck.Remaining)
 		})
+
+	// Querying for a shuffled deck with invalid cards
+	r.POST("/decks").
+		SetQuery(gofight.H{
+			"shuffle": "true",
+			"cards":   `ZZ, XX, YY`,
+		}).
+		Run(CreateServer(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+			assert.Equal(t, http.StatusBadRequest, r.Code)
+		})
 }
 
 func TestFetchDecksEndpoint(t *testing.T) {
@@ -216,7 +228,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 
 	resetDb()
 
-	// Request with missing amount
+	// Request with correct body
 	r.GET("/decks/cards").
 		SetQuery(gofight.H{
 			"id":     controllers.Decks[0].Id.String(),
@@ -224,9 +236,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 		}).
 		Run(CreateServer(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
 			assert.Equal(t, http.StatusOK, r.Code)
-
 			cards := extractCards(r.Body.Bytes())
-
 			assert.Equal(t, 10, len(cards.Cards))
 		})
 

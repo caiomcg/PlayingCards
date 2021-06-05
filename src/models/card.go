@@ -115,15 +115,16 @@ func removeDuplicates(elements []string) []string {
 	return result
 }
 
-func GenerateCustomSet(in []string) []Card {
+func GenerateCustomSet(in []string) ([]Card, error) {
 	result := []Card{}
 
 	for _, v := range removeDuplicates(in) {
 		card, e := CreateCardFromCode(v)
-		if e == nil {
-			result = append(result, card)
+		if e != nil {
+			return []Card{}, e
 		}
+		result = append(result, card)
 	}
 
-	return result
+	return result, nil
 }

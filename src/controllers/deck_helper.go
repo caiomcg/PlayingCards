@@ -7,13 +7,14 @@ import (
 	"strings"
 )
 
-func findDeck(id string) (models.Deck, error) {
-	for _, v := range Decks {
-		if v.Id.String() == id {
-			return v, nil
+func findDeck(id string) (*models.Deck, error) {
+	for i, _ := range Decks {
+		if Decks[i].Id.String() == id {
+			return &Decks[i], nil
 		}
 	}
-	return models.Deck{}, errors.New("Deck not found")
+
+	return &models.Deck{}, errors.New("Deck not found")
 }
 
 func processAmountParam(amount string) (int64, error) {
