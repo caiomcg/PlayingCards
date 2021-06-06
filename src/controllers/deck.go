@@ -54,6 +54,7 @@ func FetchDeckCardsEndpoint(c echo.Context) error {
 			"Could not find a deck with the desired ID",
 		)
 	}
+
 	amount, e := processAmountParam(c.QueryParam("amount"))
 	if e != nil {
 		return helpers.NewHTTPError(
@@ -63,8 +64,18 @@ func FetchDeckCardsEndpoint(c echo.Context) error {
 		)
 	}
 
+    cards := deck.Draw(int(amount))
+
+    if len(cards.Cards) == 0 {
+		return helpers.NewHTTPError(
+			http.StatusNotFound,
+            "Could not get more cards",
+			"The deck is empty",
+		)
+    }
+
 	return c.JSON(
 		http.StatusOK,
-		deck.Draw(int(amount)),
+        cards,
 	)
 }
