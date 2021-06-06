@@ -236,7 +236,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 	resetDb()
 
 	// Request with correct body
-	r.GET("/decks/cards").
+	r.PUT("/decks/cards").
 		SetQuery(gofight.H{
 			"id":     getElementFromDatabase().Id.String(),
 			"amount": "10",
@@ -248,13 +248,13 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 		})
 
 	// Request witouth a valid body
-	r.GET("/decks/cards").
+	r.PUT("/decks/cards").
 		Run(CreateServer(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
 			assert.Equal(t, http.StatusNotFound, r.Code)
 		})
 
 	// Request with missing keys
-	r.GET("/decks/cards").
+	r.PUT("/decks/cards").
 		SetQuery(gofight.H{
 			"id":    "INVALID",
 			"count": "10",
@@ -264,7 +264,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 		})
 
 	// Request with invalid deck id
-	r.GET("/decks/cards").
+	r.PUT("/decks/cards").
 		SetQuery(gofight.H{
 			"id":     "INVALID",
 			"amount": "2",
@@ -274,7 +274,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 		})
 
 	// Request with missing amount
-	r.GET("/decks/cards").
+	r.PUT("/decks/cards").
 		SetQuery(gofight.H{
 			"id": getElementFromDatabase().Id.String(),
 		}).
@@ -283,7 +283,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 		})
 
 	// Request with invalid amount
-	r.GET("/decks/cards").
+	r.PUT("/decks/cards").
 		SetQuery(gofight.H{
 			"id":     getElementFromDatabase().Id.String(),
 			"amount": "0",
@@ -292,7 +292,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 			assert.Equal(t, http.StatusBadRequest, r.Code)
 		})
 
-	r.GET("/decks/cards").
+	r.PUT("/decks/cards").
 		SetQuery(gofight.H{
 			"id":     getElementFromDatabase().Id.String(),
 			"amount": "-12",
@@ -301,7 +301,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 			assert.Equal(t, http.StatusBadRequest, r.Code)
 		})
 
-	r.GET("/decks/cards").
+	r.PUT("/decks/cards").
 		SetQuery(gofight.H{
 			"id":     getElementFromDatabase().Id.String(),
 			"amount": "INVALID",
