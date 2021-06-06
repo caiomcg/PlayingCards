@@ -32,8 +32,12 @@ Returns json data about upon the creation of a deck.
     **Content:** `{ "deck_id": "e5db62c5-fd0c-4cc9-a460-89030a1d836e", "shuffled": false, "remaining": 52, "cards": [ { "value": "ACE", "suit": "SPADES", "code": "AS" }, ...] }`
 
 - **Fail Response**
+
   - **Code:** 404 <br />
     **Content:** `{ "error": "Invalid id", "message": "Could not find a deck with the desired ID" }`
+
+  - **Code:** 404 <br />
+    **Content:** `{ "error": "Could not get more cards", "message": "The deck is empty" }`
 
   - **Code:** 400 <br />
     **Content:** `{ "error": "Invalid amount", "message": "Amount not given or zero" }`

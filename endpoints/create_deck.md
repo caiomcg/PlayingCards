@@ -1,6 +1,6 @@
 ## **Create Deck**
 
-Returns json data about upon the creation of a deck.
+Returns json data upon the creation of a deck.
 
 - **URL**
 
@@ -28,3 +28,7 @@ Returns json data about upon the creation of a deck.
 
   - **Code:** 200 <br />
     **Content:** `{ "deck_id": "e5db62c5-fd0c-4cc9-a460-89030a1d836e", "shuffled": false, "remaining": 52, "cards": [ { "value": "ACE", "suit": "SPADES", "code": "AS" }, ...] }`
+
+- **Fail Response:**
+  - **Code:** 400 <br />
+    **Content:** `{ "error": "Invalid custom card", "message": "Card codes should follow the estipulated rules" }`
