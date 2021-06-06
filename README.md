@@ -46,6 +46,20 @@ Unit tests and integration tests can be executed by invoking make tests
 $ make tests
 ```
 
+## Compiling and running the server
+
+To compile the server invoke make build
+
+```sh
+$ make build
+```
+
+To compile and run the server invoke make run
+
+```sh
+$ make run
+```
+
 ## Notes on business rules
 
 For the Create Deck Route, the cards passed as a query parameter are not sorted,
@@ -56,6 +70,9 @@ For the entire project, 10 of any suit is written as 'X'. e.g.: XS, 10 of spades
 ## Routes
 
 [Create Deck](./endpoints/create_deck.md)
+
 [Fetch One Deck](./endpoints/fetch_one_deck.md)
+
 [Fetch All Decks](./endpoints/fetch_all_decks.md)
+
 [Draw Cards From Deck](./endpoints/draw_card_from_deck.md)
