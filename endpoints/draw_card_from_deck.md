@@ -8,7 +8,7 @@ Returns json data about upon the creation of a deck.
 
 - **Method:**
 
-  `POST`
+  `PUT`
 
 - **URL Params**
 
