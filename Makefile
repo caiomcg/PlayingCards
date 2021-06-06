@@ -18,7 +18,7 @@ clean:
 	rm -rf ./bin
 	rm -rf ./out
 
-test: ## Run the tests of the project
+tests: ## Run the tests of the project
 ifeq ($(EXPORT_RESULT), true)
 	GO111MODULE=off go get -u github.com/jstemmer/go-junit-report
 	$(eval OUTPUT_OPTIONS = | tee /dev/tty | go-junit-report -set-exit-code > junit-report.xml)
