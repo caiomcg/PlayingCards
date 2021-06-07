@@ -63,9 +63,14 @@ $ make run
 ## Notes on business rules
 
 For the Create Deck Route, the cards passed as a query parameter are not sorted,
-int other words, they keep the order of the cards as sent through the request.
+in other words, they keep the order of the cards as sent through the request. e.g.:
+for /decks?cards=AS,KD,XC the cards will be maintained as is, AS, KD, XC.
 
 For the entire project, 10 of any suit is written as 'X'. e.g.: XS, 10 of spades
+
+The project does not use a relational/non relational database, instead I have decided
+to use a slice to store my decks. I am aware this is not ACID compliant and assume
+this will not be a problem for this project.
 
 ## Routes
 
