@@ -42,7 +42,7 @@ func OpenDeckEndpoint(c echo.Context) error {
 	return c.JSON(http.StatusOK, deck)
 }
 
-func FetchDeckCardsEndpoint(c echo.Context) error {
+func DrawCardsEndpoint(c echo.Context) error {
 	deck, e := db.Instance().Find(c.QueryParam("id"))
 	if e != nil {
 		return helpers.NewHTTPError(

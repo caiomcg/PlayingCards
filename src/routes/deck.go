@@ -18,6 +18,6 @@ func RegisterDeck(r *echo.Router) {
 	r.Add(
 		http.MethodPut,
 		fmt.Sprintf("%s/cards", baseRoute),
-		controllers.FetchDeckCardsEndpoint,
+		controllers.DrawCardsEndpoint,
 	)
 }
