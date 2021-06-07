@@ -8,9 +8,6 @@ import (
 	"net/http"
 )
 
-// This is our "DB". To avoid taking more time studying an in memory database
-// I've decided upon using a simple array as our database. This should be
-// moved to a dedicated DB if we care about ACID
 func CreateDeckEndpoint(c echo.Context) error {
 	shuffle := processShuffleParam(c.QueryParam("shuffle"))
 	deck := processCardsParam(c.QueryParam("cards"))
@@ -64,18 +61,18 @@ func FetchDeckCardsEndpoint(c echo.Context) error {
 		)
 	}
 
-    cards := deck.Draw(int(amount))
+	cards := deck.Draw(int(amount))
 
-    if len(cards.Cards) == 0 {
+	if len(cards.Cards) == 0 {
 		return helpers.NewHTTPError(
 			http.StatusNotFound,
-            "Could not get more cards",
+			"Could not get more cards",
 			"The deck is empty",
 		)
-    }
+	}
 
 	return c.JSON(
 		http.StatusOK,
-        cards,
+		cards,
 	)
 }
