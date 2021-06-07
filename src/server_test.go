@@ -11,7 +11,7 @@ import (
 	"net/http"
 )
 
-var (
+const (
 	STANDARD_SIZE uint8 = 52
 )
 
