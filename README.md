@@ -1,6 +1,6 @@
 # PlayingCards
 
-A simple REST API to emulate the creation an manipulation of decks of cards.
+A simple REST API to emulate the creation and manipulation of decks of cards.
 
 ## Project Structure
 
@@ -23,8 +23,8 @@ project are used as facilitators for the creation of errors that are handled by 
 ### controllers folder
 
 The controllers folder handles all of the validations specific to a particular route, being them:
-parsing query parameters or address parameters, inserting/retrieving content from the database or
-preparing a properly formatted response.
+parsing query parameters or address parameters, and inserting/retrieving content from the database
+to a formatted response
 
 ### db folder
 
@@ -69,10 +69,10 @@ For the entire project, 10 of any suit is written as 'X'. e.g.: XS, 10 of spades
 
 ## Routes
 
-[Create Deck](./endpoints/create_deck.md)
+[Create Deck](./docs/create_deck.md)
 
-[Fetch One Deck](./endpoints/fetch_one_deck.md)
+[Fetch One Deck](./docs/fetch_one_deck.md)
 
-[Fetch All Decks](./endpoints/fetch_all_decks.md)
+[Fetch All Decks](./docs/fetch_all_decks.md)
 
-[Draw Cards From Deck](./endpoints/draw_card_from_deck.md)
+[Draw Cards From Deck](./docs/draw_card_from_deck.md)

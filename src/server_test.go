@@ -235,7 +235,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 
 	resetDb()
 
-	// Request with correct body
+	// Request with correct query
 	r.PUT("/decks/cards").
 		SetQuery(gofight.H{
 			"id":     getElementFromDatabase().Id.String(),
@@ -247,7 +247,7 @@ func TestFetchDeckCardsEndpoint(t *testing.T) {
 			assert.Equal(t, 10, len(cards.Cards))
 		})
 
-	// Request witouth a valid body
+	// Request witouth a valid query
 	r.PUT("/decks/cards").
 		Run(CreateServer(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
 			assert.Equal(t, http.StatusNotFound, r.Code)
